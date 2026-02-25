@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Painel do Médico</title>
+
+    <style>
+        body{
+            margin:0;
+            font-family: Arial, sans-serif;
+            background-color:#f4f6f9;
+        }
+
+        .sidebar{
+            width:220px;
+            height:100vh;
+            background:#1e88e5;
+            color:white;
+            position:fixed;
+            padding:20px;
+        }
+
+        .sidebar h2{
+            text-align:center;
+        }
+
+        .content{
+            margin-left:240px;
+            padding:30px;
+        }
+
+        .card{
+            background:white;
+            padding:20px;
+            border-radius:10px;
+            box-shadow:0 4px 10px rgba(0,0,0,0.1);
+            margin-bottom:15px;
+        }
+
+        ul{
+            list-style:none;
+            padding:0;
+        }
+
+        li{
+            padding:10px;
+            border-bottom:1px solid #ddd;
+        }
+
+        .header{
+            font-size:22px;
+            margin-bottom:20px;
+        }
+    </style>
+
+</head>
+<body>
+
+<div class="sidebar">
+    <h2>Clínica Vida+</h2>
+    <p>👨‍⚕️ Médico</p>
+</div>
+
+<div class="content">
+    <div class="header">Minhas Consultas</div>
+    <div class="card">
+        <ul id="lista"></ul>
+    </div>
+</div>
+
+<script>
+    const API = "http://localhost:8080";
+    const nome = localStorage.getItem("nome");
+
+    fetch(API + "/consultas")
+    .then(res => res.json())
+    .then(data => {
+        const lista = document.getElementById("lista");
+        data
+        .filter(c => c.medico.nome === nome)
+        .forEach(c => {
+            lista.innerHTML += `
+                <li>
+                    👤 ${c.paciente.nome} <br>
+                    📅 ${c.data}
+                </li>
+            `;
+        });
+    });
+</script>
+
+</body>
+</html>

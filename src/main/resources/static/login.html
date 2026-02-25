@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Clínica Vida+ | Login</title>
+
+    <style>
+        body{
+            margin:0;
+            height:100vh;
+            display:flex;
+            justify-content:center;
+            align-items:center;
+            font-family:Arial, sans-serif;
+            background:linear-gradient(135deg, #1e88e5, #43a047);
+        }
+
+        .login-card{
+            background:white;
+            padding:40px;
+            border-radius:15px;
+            box-shadow:0 10px 25px rgba(0,0,0,0.2);
+            width:350px;
+            text-align:center;
+        }
+
+        .login-card h1{
+            margin-bottom:10px;
+            color:#1e88e5;
+        }
+
+        .subtitle{
+            font-size:14px;
+            color:#666;
+            margin-bottom:30px;
+        }
+
+        select, input{
+            width:100%;
+            padding:10px;
+            margin:10px 0;
+            border-radius:8px;
+            border:1px solid #ccc;
+            font-size:14px;
+        }
+
+        button{
+            width:100%;
+            padding:12px;
+            background:#1e88e5;
+            color:white;
+            border:none;
+            border-radius:8px;
+            font-size:16px;
+            cursor:pointer;
+            transition:0.3s;
+        }
+
+        button:hover{
+            background:#1565c0;
+        }
+
+        .footer{
+            margin-top:20px;
+            font-size:12px;
+            color:#888;
+        }
+    </style>
+
+</head>
+<body>
+
+<div class="login-card">
+    <h1>Clínica Vida+</h1>
+    <div class="subtitle">Sistema de Gestão de Consultas</div>
+
+    <select id="perfil">
+        <option value="medico">👨‍⚕️ Médico</option>
+        <option value="paciente">👤 Paciente</option>
+        <option value="recepcao">🧾 Recepção</option>
+    </select>
+
+    <input type="text" id="nome" placeholder="Digite seu nome">
+
+    <button onclick="entrar()">Entrar</button>
+
+    <div class="footer">
+        © 2026 Clínica Vida+<br>
+        Sistema Interno
+    </div>
+</div>
+
+<script>
+    function entrar(){
+        const perfil = document.getElementById("perfil").value;
+        const nome = document.getElementById("nome").value;
+
+        if(!nome){
+            alert("Digite seu nome!");
+            return;
+        }
+
+        localStorage.setItem("perfil", perfil);
+        localStorage.setItem("nome", nome);
+
+        window.location.href = perfil + ".html";
+    }
+</script>
+
+</body>
+</html>

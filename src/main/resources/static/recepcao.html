@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Recepção</title>
+
+    <style>
+        body{
+            margin:0;
+            font-family: Arial;
+            background:#f4f6f9;
+        }
+
+        .sidebar{
+            width:220px;
+            height:100vh;
+            background:#6d4c41;
+            color:white;
+            position:fixed;
+            padding:20px;
+        }
+
+        .content{
+            margin-left:240px;
+            padding:30px;
+        }
+
+        .card{
+            background:white;
+            padding:20px;
+            border-radius:10px;
+            box-shadow:0 4px 10px rgba(0,0,0,0.1);
+            margin-bottom:20px;
+        }
+
+        select, input{
+            padding:8px;
+            margin:5px;
+            width:200px;
+        }
+
+        button{
+            padding:8px 15px;
+            background:#1e88e5;
+            color:white;
+            border:none;
+            border-radius:5px;
+            cursor:pointer;
+        }
+
+        button:hover{
+            background:#1565c0;
+        }
+
+        li{
+            padding:10px;
+            border-bottom:1px solid #ddd;
+        }
+    </style>
+
+</head>
+<body>
+
+<div class="sidebar">
+    <h2>Clínica Vida+</h2>
+    <p>🧾 Recepção</p>
+</div>
+
+<div class="content">
+    <h2>Agendar Consulta</h2>
+
+    <div class="card">
+        <select id="pacienteSelect"></select>
+        <select id="medicoSelect"></select>
+        <input type="datetime-local" id="data">
+        <button onclick="criar()">Agendar</button>
+    </div>
+
+    <div class="card">
+        <h3>Agenda</h3>
+        <ul id="lista"></ul>
+    </div>
+</div>
+
+<script>
+    const API = "http://localhost:8080";
+
+    function carregarPacientes(){
+        fetch(API + "/pacientes")
+        .then(res => res.json())
+        .then(data => {
+            const select = document.getElementById("pacienteSelect");
+            select.innerHTML = "<option value=''>Selecione Paciente</option>";
+            data.forEach(p=>{
+                select.innerHTML += `<option value="${p.id}">${p.nome}</option>`;
+            });
+        });
+    }
+
+    function carregarMedicos(){
+        fetch(API + "/medicos")
+        .then(res => res.json())
+        .then(data => {
+            const select = document.getElementById("medicoSelect");
+            select.innerHTML = "<option value=''>Selecione Médico</option>";
+            data.forEach(m=>{
+                select.innerHTML += `<option value="${m.id}">${m.nome} - ${m.especialidade}</option>`;
+            });
+        });
+    }
+
+    function carregarConsultas(){
+        fetch(API + "/consultas")
+        .then(res => res.json())
+        .then(data => {
+            const lista = document.getElementById("lista");
+            lista.innerHTML="";
+            data.forEach(c=>{
+                lista.innerHTML+=`
+                    <li>
+                        👤 ${c.paciente.nome} | 🩺 ${c.medico.nome} | 📅 ${c.data}
+                        <button onclick="deletar(${c.id})">Excluir</button>
+                    </li>
+                `;
+            });
+        });
+    }
+
+    function criar(){
+        const pacienteId = document.getElementById("pacienteSelect").value;
+        const medicoId = document.getElementById("medicoSelect").value;
+        const data = document.getElementById("data").value;
+
+        if(!pacienteId || !medicoId || !data){
+            alert("Preencha todos os campos!");
+            return;
+        }
+
+        fetch(API + "/consultas",{
+            method:"POST",
+            headers:{"Content-Type":"application/json"},
+            body:JSON.stringify({
+                paciente:{id:pacienteId},
+                medico:{id:medicoId},
+                data
+            })
+        }).then(()=>{
+            carregarConsultas();
+        });
+    }
+
+    function deletar(id){
+        fetch(API + "/consultas/"+id,{
+            method:"DELETE"
+        }).then(()=>carregarConsultas());
+    }
+
+    carregarPacientes();
+    carregarMedicos();
+    carregarConsultas();
+</script>
+
+</body>
+</html>

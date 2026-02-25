@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Painel do Paciente</title>
+
+    <style>
+        body{
+            margin:0;
+            font-family: Arial;
+            background:#f4f6f9;
+        }
+
+        .sidebar{
+            width:220px;
+            height:100vh;
+            background:#43a047;
+            color:white;
+            position:fixed;
+            padding:20px;
+        }
+
+        .content{
+            margin-left:240px;
+            padding:30px;
+        }
+
+        .card{
+            background:white;
+            padding:20px;
+            border-radius:10px;
+            box-shadow:0 4px 10px rgba(0,0,0,0.1);
+        }
+
+        li{
+            padding:10px;
+            border-bottom:1px solid #ddd;
+        }
+    </style>
+
+</head>
+<body>
+
+<div class="sidebar">
+    <h2>Clínica Vida+</h2>
+    <p>👤 Paciente</p>
+</div>
+
+<div class="content">
+    <h2>Minhas Consultas</h2>
+    <div class="card">
+        <ul id="lista"></ul>
+    </div>
+</div>
+
+<script>
+    const API = "http://localhost:8080";
+    const nome = localStorage.getItem("nome");
+
+    fetch(API + "/consultas")
+    .then(res => res.json())
+    .then(data => {
+        const lista = document.getElementById("lista");
+        data
+        .filter(c => c.paciente.nome === nome)
+        .forEach(c => {
+            lista.innerHTML += `
+                <li>
+                    🩺 ${c.medico.nome} <br>
+                    📅 ${c.data}
+                </li>
+            `;
+        });
+    });
+</script>
+
+</body>
+</html>
