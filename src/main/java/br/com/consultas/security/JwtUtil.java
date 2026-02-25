@@ -12,7 +12,6 @@ import java.util.Date;
 @Component
 public class JwtUtil {
 
-    // 32+ caracteres obrigatórios para HS256
     private static final String SECRET =
             "minha-chave-super-secreta-para-jwt-2024-segura";
 
@@ -31,12 +30,23 @@ public class JwtUtil {
 
     public String extrairUsername(String token) {
 
-        Claims claims = Jwts.parser()
+        return extrairClaims(token).getSubject();
+    }
+
+    public boolean validarToken(String token) {
+        try {
+            extrairClaims(token);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    private Claims extrairClaims(String token) {
+        return Jwts.parser()
                 .verifyWith(key)
                 .build()
                 .parseSignedClaims(token)
                 .getPayload();
-
-        return claims.getSubject();
     }
 }
