@@ -1,6 +1,8 @@
 package br.com.consultas.controller;
 
 import br.com.consultas.model.Consulta;
+import br.com.consultas.model.Medico;
+import br.com.consultas.model.Paciente;
 import br.com.consultas.service.ConsultaService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -22,7 +24,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest(ConsultaController.class)
-@AutoConfigureMockMvc(addFilters = false) // desativa segurança para teste
+@AutoConfigureMockMvc(addFilters = false)
 class ConsultaControllerTest {
 
     @Autowired
@@ -37,7 +39,20 @@ class ConsultaControllerTest {
     @Test
     void deveCriarConsultaComSucesso() throws Exception {
 
+        // Criando paciente
+        Paciente paciente = new Paciente();
+        paciente.setId(1L);
+        paciente.setNome("João");
+
+        // Criando médico
+        Medico medico = new Medico();
+        medico.setId(1L);
+        medico.setNome("Dr. Carlos");
+
+        // Criando consulta
         Consulta consulta = new Consulta();
+        consulta.setPaciente(paciente);
+        consulta.setMedico(medico);
         consulta.setData(LocalDate.now());
         consulta.setHorario(LocalTime.now());
         consulta.setObservacao("Consulta teste");
@@ -49,7 +64,7 @@ class ConsultaControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(consulta)))
                 .andExpect(status().isCreated())
-                .andExpect(jsonPath("$.success").value(true))
-                .andExpect(jsonPath("$.message").value("Consulta criada com sucesso"));
+                .andExpect(jsonPath("$.sucesso").value(true))
+                .andExpect(jsonPath("$.mensagem").value("Consulta criada com sucesso"));
     }
 }
