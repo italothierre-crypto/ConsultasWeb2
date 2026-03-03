@@ -3,6 +3,7 @@ package br.com.consultas.service;
 import br.com.consultas.model.Paciente;
 import br.com.consultas.repository.PacienteRepository;
 import org.springframework.stereotype.Service;
+import java.util.Map;
 
 import java.util.List;
 
@@ -40,6 +41,39 @@ public class PacienteService {
         paciente.setTelefone(pacienteAtualizado.getTelefone());
         paciente.setEmail(pacienteAtualizado.getEmail());
         paciente.setDataNascimento(pacienteAtualizado.getDataNascimento());
+
+        return repository.save(paciente);
+    }
+    //Upadate Parcial
+    public Paciente atualizarParcial(Long id, Map<String, Object> campos) {
+
+        Paciente paciente = repository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Paciente não encontrado"));
+
+        campos.forEach((campo, valor) -> {
+
+            switch (campo) {
+
+                case "nome":
+                    paciente.setNome((String) valor);
+                    break;
+
+                case "cpf":
+                    paciente.setCpf((String) valor);
+                    break;
+
+                case "telefone":
+                    paciente.setTelefone((String) valor);
+                    break;
+
+                case "email":
+                    paciente.setEmail((String) valor);
+                    break;
+
+                default:
+                    throw new RuntimeException("Campo inválido: " + campo);
+            }
+        });
 
         return repository.save(paciente);
     }

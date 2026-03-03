@@ -6,6 +6,7 @@ import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import java.util.Map;
 
 import java.util.List;
 
@@ -46,6 +47,14 @@ public class PacienteController {
             @Valid @RequestBody Paciente paciente) {
 
         return ResponseEntity.ok(service.atualizar(id, paciente));
+    }
+    //Update parcial
+    @PatchMapping("/{id}")
+    public ResponseEntity<Paciente> atualizarParcial(
+            @PathVariable Long id,
+            @RequestBody Map<String, Object> campos) {
+
+        return ResponseEntity.ok(service.atualizarParcial(id, campos));
     }
 
     // DELETE
