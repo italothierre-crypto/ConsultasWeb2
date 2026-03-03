@@ -7,6 +7,7 @@ import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import java.util.Map;
 
 import java.util.List;
 
@@ -29,6 +30,18 @@ public class ConsultaController {
                 new ApiResponse<>(true, "Consulta criada com sucesso", salva);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
+    }
+    @PatchMapping("/{id}")
+    public ResponseEntity<ApiResponse<Consulta>> atualizarParcial(
+            @PathVariable Long id,
+            @RequestBody Map<String, Object> campos) {
+
+        Consulta atualizada = service.atualizarParcial(id, campos);
+
+        ApiResponse<Consulta> response =
+                new ApiResponse<>(true, "Consulta atualizada parcialmente com sucesso", atualizada);
+
+        return ResponseEntity.ok(response);
     }
 
     @GetMapping
