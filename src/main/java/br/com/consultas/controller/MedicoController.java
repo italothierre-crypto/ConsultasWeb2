@@ -43,6 +43,13 @@ public class MedicoController {
 
         return service.atualizar(id, medico);
     }
+    @PatchMapping("/{id}")
+    public Medico atualizarParcial(
+            @PathVariable Long id,
+            @RequestBody Medico medico) {
+
+        return service.atualizarParcial(id, medico);
+    }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deletar(@PathVariable Long id) {

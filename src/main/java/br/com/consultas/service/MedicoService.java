@@ -39,6 +39,28 @@ public class MedicoService {
 
         return repository.save(medico);
     }
+    public Medico atualizarParcial(Long id, Medico medicoAtualizado) {
+
+        Medico medico = repository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Médico não encontrado"));
+
+        if (medicoAtualizado.getNome() != null)
+            medico.setNome(medicoAtualizado.getNome());
+
+        if (medicoAtualizado.getEspecialidade() != null)
+            medico.setEspecialidade(medicoAtualizado.getEspecialidade());
+
+        if (medicoAtualizado.getCrm() != null)
+            medico.setCrm(medicoAtualizado.getCrm());
+
+        if (medicoAtualizado.getTelefone() != null)
+            medico.setTelefone(medicoAtualizado.getTelefone());
+
+        if (medicoAtualizado.getEmail() != null)
+            medico.setEmail(medicoAtualizado.getEmail());
+
+        return repository.save(medico);
+    }
 
     public void deletar(Long id) {
         repository.deleteById(id);
