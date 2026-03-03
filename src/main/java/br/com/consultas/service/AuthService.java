@@ -4,6 +4,7 @@ import br.com.consultas.model.Usuario;
 import br.com.consultas.repository.UsuarioRepository;
 import br.com.consultas.security.JwtUtil;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -12,14 +13,16 @@ public class AuthService {
 
     private final UsuarioRepository usuarioRepository;
     private final JwtUtil jwtUtil;
+    private final PasswordEncoder passwordEncoder;
 
     public String login(String username, String password) {
 
         Usuario user = usuarioRepository.findByUsername(username)
                 .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
 
-        if (!user.getPassword().equals(password))
+        if (!passwordEncoder.matches(password, user.getPassword())) {
             throw new RuntimeException("Senha inválida");
+        }
 
         return jwtUtil.gerarToken(username);
     }
