@@ -26,4 +26,17 @@ public class AuthService {
 
         return jwtUtil.gerarToken(username);
     }
+
+    public void register(String username, String password) {
+
+        if (usuarioRepository.findByUsername(username).isPresent()) {
+            throw new RuntimeException("Usuário já existe");
+        }
+
+        Usuario user = new Usuario();
+        user.setUsername(username);
+        user.setPassword(passwordEncoder.encode(password));
+
+        usuarioRepository.save(user);
+    }
 }

@@ -23,4 +23,15 @@ public class AuthController {
 
         return Map.of("token", token);
     }
+
+    @PostMapping("/register")
+    public Map<String, String> register(@RequestBody Map<String, String> body) {
+
+        authService.register(
+                body.get("username"),
+                body.get("password")
+        );
+
+        return Map.of("message", "Usuário criado com sucesso");
+    }
 }
